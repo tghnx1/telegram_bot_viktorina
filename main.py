@@ -11,6 +11,9 @@ from pathlib import Path
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from datetime import datetime, timezone
+
+MAX_UPDATE_AGE = 60  # секунд
 
 # === Logging ===
 logging.basicConfig(level=logging.INFO)
@@ -122,7 +125,14 @@ async def start_handler(message: types.Message):
 @dp.message()
 async def universal_handler(message: types.Message):
     text = message.text.lower().strip() if message.text else ""
+    # фильтр "старых" апдейтов
+    now = datetime.now(timezone.utc)
+    age = (now - message.date).total_seconds()
+    if age > MAX_UPDATE_AGE:
+        logger.info(f"⏩ Пропущено старое сообщение ({int(age)} сек. назад) от {message.from_user.id}")
+        return
 
+    text = message.text.lower().strip() if message.text else ""
     # === Private Chat ===
     if message.chat.type == "private":
         user_id = str(message.from_user.id)
