@@ -2,7 +2,7 @@ from locust import HttpUser, task, between
 import random
 import json
 
-BOT_TOKEN = "5111196744:AAHk1ecAM9XcI3ShPilY0OUSOqCHfFFreNA"
+BOT_TOKEN = "xxxxxxx"
 CHAT_ID = "-4805839645"  # Use your real chat ID
 
 class TelegramBotUser(HttpUser):
